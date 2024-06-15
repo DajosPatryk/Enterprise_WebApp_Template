@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import AvaloniaTesting from "~/components/AvaloniaTesting.vue";
 </script>
 
 <template>
   <div>
-    <NuxtWelcome/>
+    <AvaloniaTesting/>
   </div>
 </template>

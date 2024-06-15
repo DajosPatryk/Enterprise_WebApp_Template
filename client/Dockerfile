@@ -3,7 +3,7 @@ FROM $NODE_IMAGE AS base
 WORKDIR /app
 
 FROM base AS setup
-COPY package.json bun.lockb ./
+COPY package.json ./
 RUN bun install
 
 FROM base AS development

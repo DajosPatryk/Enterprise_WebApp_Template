@@ -1,26 +1,25 @@
 # Enterprise Web-App Template - Nuxt3 + .NET8 + PostgreSQL
 
 Development package based on Vue3 Nuxt, .NET8 and PostgreSQL. Modern & Performance Oriented.
-[Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-[.NET 8 documentation](https://learn.microsoft.com/en-us/dotnet/fundamentals/) to learn more.
+[Nuxt3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+[.NET8 documentation](https://learn.microsoft.com/en-us/dotnet/fundamentals/) to learn more.
 
 > **Note:**
 > This package was made by Avalonia for personal use. It includes pages for legal and privacy policies.
 
-## Setup & Development
+# Setup
+
+Install tools. [.NET8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) is required for this project.
+
+```bash
+dotnet tool install --global dotnet-ef
+```
 
 Run migrations on database, for this the database (Docker) needs to run.
 
 ```bash
 cd ./server
 dotnet ef database update
-```
-
-Create new migrations based on Application Db Context.
-
-```bash
-cd ./server
-dotnet ef migrations add Initial
 ```
 
 ## Development Server
@@ -58,3 +57,12 @@ The package includes:
 This package was made in consideration for optimal maintainability, production performance and productivity. It uses powerful tools supported by MSFT.
 The package includes:
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli) ORM - Full ORM maintained by MSFT, utilizes memory for optimal performance.
+
+## Development
+
+Create new migrations based on Application Db Context.
+
+```bash
+cd ./server
+dotnet ef migrations add
+```
