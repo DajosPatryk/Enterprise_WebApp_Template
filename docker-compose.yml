@@ -1,0 +1,83 @@
+version: '2.27'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: "postgres_db"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - db_backups:/backups
+    restart: always
+    labels:
+      - "author=${AUTHOR}"
+      - "project=${SLUG}"
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata/
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: "dotnet_api"
+    volumes:
+      - ./server/:/app
+    restart: always
+    labels:
+      - "author=${AUTHOR}"
+      - "project=${SLUG}"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      DB_CONNECTION: "Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Database=${POSTGRES_DB};"
+      ASPNETCORE_ENVIRONMENT: "Development"
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: "nuxt_client"
+    volumes:
+      - ./client/:/app
+      - /app/node_modules
+    restart: always
+    labels:
+      - "author=${AUTHOR}"
+      - "project=${SLUG}"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    environment:
+      API_ADDRESS: "http://api:8080"
+      HOST: "0.0.0.0"
+      NODE_ENV: "development"
+
+  backup:
+    image: alpine
+    container_name: "db_backup"
+    volumes:
+      - ./backup.sh/:/backup.sh
+      - db_backups:/backups
+    restart: always
+    labels:
+      - "author=${AUTHOR}"
+      - "project=${SLUG}"
+    entrypoint: "/bin/sh"
+    command: "-c 'echo \"0 2 * * * /bin/sh /backup.sh\" | crontab - && crond -f -d 8'"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  db_backups:

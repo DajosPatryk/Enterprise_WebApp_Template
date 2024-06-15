@@ -1,0 +1,15 @@
+#!/bin/bash
+
+TIMESTAMP=$(date +"%F")
+BACKUP_DIR="/backups"
+
+DB_HOST="db"
+DB_USER="${POSTGRES_USER}"
+DB_PASSWORD="${POSTGRES_PASSWORD}"
+DB_NAME="${POSTGRES_DB}"
+
+export PGPASSWORD=${DB_PASSWORD}
+
+pg_dump -U ${DB_USER} -h ${DB_HOST} -d ${DB_NAME} > ${BACKUP_DIR}/${DB_NAME}-${TIMESTAMP}.sql
+
+unset PGPASSWORD

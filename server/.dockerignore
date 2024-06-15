@@ -1,0 +1,25 @@
+# Ignore directories
+**/bin/
+**/obj/
+**/.vs/
+**/.idea/
+**/.vscode/
+**/.github/
+
+# Ignore specific files
+**/*.user
+**/secrets.json
+**/.gitignore
+
+# Ignore Docker related files
+**/.dockerignore
+**/Dockerfile*
+**/docker-compose*
+
+# Ignore all variations and configurations of Dockerfiles
+**/Dockerfile
+**/Dockerfile.prod
+
+# Ignore all variations of docker-compose files
+**/docker-compose*
+**/docker-compose.*.yml

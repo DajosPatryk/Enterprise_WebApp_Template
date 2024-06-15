@@ -1,0 +1,24 @@
+ARG DOTNET_IMAGE=mcr.microsoft.com/dotnet/sdk:8.0
+FROM $DOTNET_IMAGE AS base
+WORKDIR /app
+
+FROM base AS setup
+COPY *.csproj ./
+RUN dotnet nuget locals all --clear
+RUN dotnet restore
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+RUN dotnet ef database update
+
+FROM base AS prerelease
+COPY --from=setup /app/*.csproj ./
+COPY . ./
+RUN dotnet publish -c Release -o out --no-restore
+
+ARG DOTNET_RUNTIME_IMAGE=mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled     # Lightweight Runtime
+FROM $DOTNET_RUNTIME_IMAGE AS runtime
+WORKDIR /app
+COPY --from=prerelease /app/out .
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "server.dll"]

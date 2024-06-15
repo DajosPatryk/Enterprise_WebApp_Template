@@ -1,0 +1,70 @@
+/.idea
+/.vs
+/.vscode
+
+# Node modules and build output for Nuxt/JavaScript
+node_modules/
+.nuxt/
+dist/
+static/sw.js
+.npm/
+
+# Logs and runtime data
+*.log
+*.pid
+*.pid.lock
+pids
+logs
+*.tsbuildinfo
+
+# Environment configuration files
+#.env*
+!.env.example
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+/.idea/
+.vs/
+.vscode/
+*.swp
+*.swo
+
+# Build results for .NET
+[Bb]in/
+[Bb]uild/
+[Oo]bj/
+[Pp]ublish/
+[Dd]ebug/
+[Rr]elease/
+out/
+build/
+*.user
+*.suo
+*.userprefs
+*.dll
+*.exe
+*.pdb
+*.cache
+*.vsp
+*.vspx
+*.nupkg
+*.user
+[Tt]est[Rr]esults/
+secrets.json
+Secrets.Targets
+
+# Package lock files
+package-lock.json
+yarn.lock
+bun.lockb
+
+# Backup files
+/backups
+
+# Specific file extensions to ignore
+*.swp
+*.un~
+Session.vim
