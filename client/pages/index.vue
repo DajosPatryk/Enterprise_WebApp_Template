@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import AvaloniaTesting from "~/components/AvaloniaTesting.vue";
+import AvaloniaWelcome from "~/components/AvaloniaWelcome.vue";
 </script>
 
 <template>
   <div>
-    <AvaloniaTesting/>
+    <AvaloniaWelcome/>
   </div>
 </template>

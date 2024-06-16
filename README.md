@@ -64,5 +64,5 @@ Create new migrations based on Application Db Context.
 
 ```bash
 cd ./server
-dotnet ef migrations add
+dotnet ef migrations add Initial
 ```
