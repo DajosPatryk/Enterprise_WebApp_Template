@@ -8,8 +8,8 @@ RUN bun install
 RUN bun run build
 
 FROM base AS production
-COPY --from=setup /app/.output ./.output
+COPY --from=setup /app/.output ./
 COPY . .
 
 EXPOSE 3000
-ENTRYPOINT [ "bun", ".output/server/index.mjs" ]
+ENTRYPOINT [ "bun", "server/index.mjs" ]
