@@ -9,10 +9,26 @@ Development package based on Vue3 Nuxt, .NET8 and PostgreSQL. Modern & Performan
 
 # Setup
 
-Install tools. [.NET8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) is required for this project.
+Bun is required to manage this projects client.
+- [Windows Download](https://bun.sh/docs/installation#windows)
+- [Linux/MacOS Download](https://bun.sh/docs/installation#macos-and-linux)
+
+.NET8 is required to manage this projects server.
+- [Windows Download](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [Linux/MacOS Download](https://learn.microsoft.com/en-us/dotnet/core/install/linux)
+
+Install Entity Framework Core tool.
 
 ```bash
 dotnet tool install --global dotnet-ef
+```
+
+## Development Server
+
+Start the development server on Client `http://localhost:3000`, API `http://localhost:8080`, DB `http://localhost:5432`.
+
+```bash
+docker-compose up --build
 ```
 
 Run migrations on database, for this the database (Docker) needs to run.
@@ -22,25 +38,43 @@ cd ./server
 dotnet ef database update
 ```
 
-## Development Server
-
-Start the development server on client `http://localhost:3000`, api `http://localhost:8080`, db `http://localhost:5432`.
-
-```bash
-docker-compose up --build
-```
-
 ## Production
 
 Build the application for production:
 
 ```bash
+docker-compose -f docker-compose.prod.yml build --no-cache
 docker-compose -f docker-compose.prod.yml up -d
 ```
 
+The application is accessible on `http://localhost:80` and `http://localhost:443`.
+API is accessible at `http://localhost:80/api` and `http://localhost:443/api`.
+
+> **Note:**
+> Production uses Nginx reverse-proxy method to send '/api' routes to API. 
+> In order to lock API away from the world, remove `location /api/` configuration from `nginx/nginx.conf`.
+> 
+> ```
+> location /api/ {
+>           rewrite ^/api(/.*)$ $1 break;
+>           proxy_pass http://api;
+>           proxy_http_version 1.1;
+>           proxy_set_header Upgrade $http_upgrade;
+>           proxy_set_header Connection 'upgrade';
+>           proxy_set_header Host $host;
+>           proxy_cache_bypass $http_upgrade;
+>           limit_req zone=req_limit burst=20 nodelay;
+>           proxy_cache req_cache;
+>       }
+> ```
+
 # Frontend Package - Nuxt3
 
+
 This package was made in consideration for most optimal production performance. It also uses powerful, crispy and clean UI packages.
+> **Note:**
+> This package does not use Typescript, instead it opts for Javascript with types set by JSDoc comments. This is for best productivity and build speeds.
+
 The package includes:
 - NuxtJs Mailer - For sending out E-mails through NuxtJs server.
 - NuxtJs Content - For loading formatted markdown files, great for policies and blogs.
@@ -57,12 +91,30 @@ The package includes:
 This package was made in consideration for optimal maintainability, production performance and productivity. It uses powerful tools supported by MSFT.
 The package includes:
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli) ORM - Full ORM maintained by MSFT, utilizes memory for optimal performance.
+- PostgreSQL - Feature-rich SQL database.
+- Mediator - Mediator design pattern aims to reduce dependencies between objects by restricting direct communication, creating a way for them to collaborate only through the mediator object.
+- [Fluent Results](https://github.com/altmann/FluentResults) - A lightweight Result object implementation, made to compile and return responses.
+- [Fluent Validation](https://github.com/FluentValidation/FluentValidation) - Library for building strongly-typed validation rules.
 
 ## Development
+
+Create initial migration based on Application Db Context.
+
+```bash
+cd ./server
+dotnet ef migrations add Initial
+```
 
 Create new migrations based on Application Db Context.
 
 ```bash
 cd ./server
-dotnet ef migrations add Initial
+dotnet ef migrations add Migration
+```
+
+Run migrations on database, for this the database (Docker) needs to run.
+
+```bash
+cd ./server
+dotnet ef database update
 ```

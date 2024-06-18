@@ -1,15 +1,9 @@
-namespace server.Entities;
+namespace server.Data.Entities;
 
 using System.ComponentModel.DataAnnotations;
 
 public class User
 {
-    public User(string sub, string email)
-    {
-        Sub = sub;
-        Email = email;
-    }
-    
     [Key]
     [Required]
     [MaxLength(20)]

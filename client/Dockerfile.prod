@@ -1,24 +1,15 @@
 ARG NODE_IMAGE=oven/bun:latest
-
 FROM $NODE_IMAGE AS base
 WORKDIR /app
 
 FROM base AS setup
-RUN mkdir -p /temp
-COPY package.json bun.lockb /temp/
-RUN cd /temp && bun install --frozen-lockfile
-
-FROM install AS prerelease
-COPY --from=setup /temp/node_modules node_modules
-COPY . .
-
-ENV NODE_ENV=production
+COPY package.json ./
+RUN bun install
 RUN bun run build
 
-FROM base AS release
-COPY --chown=bun:bun --from=install /temp/node_modules node_modules
-COPY --chown=bun:bun --from=prerelease /app/.output .
+FROM base AS production
+COPY --from=setup /app/.output ./.output
+COPY . .
 
-USER bun
 EXPOSE 3000
-ENTRYPOINT [ "bun", "run", "server/index.mjs" ]
+ENTRYPOINT [ "bun", ".output/server/index.mjs" ]

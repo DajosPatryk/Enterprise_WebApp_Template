@@ -1,34 +1,49 @@
 ﻿namespace server.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using server.Data.Repositories;
-using server.Entities;
+using MediatR;
+using Data.Entities;
+using Application.Commands.Users;
+using Application.Queries.Users;
 
 [ApiController]
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly UserRepository _userRepository;
-    private readonly ILogger<UserController> _logger;
+    private readonly IMediator _mediator;
 
-    public UserController(UserRepository userRepository, ILogger<UserController> logger)
+    public UserController(IMediator mediator)
     {
-        _userRepository = userRepository;
-        _logger = logger;
+        _mediator = mediator;
     }
 
     [HttpPost]
-    public async Task<ActionResult<User>> Post([FromBody] User user)
+    [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> Add([FromBody] AddUser request)
     {
-        try
-        {
-            await _userRepository.Add(user);
-            return CreatedAtAction(nameof(Post), new { sub = user.Sub }, user);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Failed to add user with Sub: {Sub}", user.Sub);
-            return StatusCode(500, "Internal server error");
-        }
+        var response = await _mediator.Send(request);
+
+        if (response.IsFailed) return BadRequest(response.Errors.ToErrorResponse());
+        var user = response.Value;
+        return CreatedAtAction(nameof(Add), new { sub = user.Sub }, user);
+    }
+
+    [HttpPatch]
+    public async Task<IActionResult> Update([FromBody] UpdateUser request)
+    {
+        var response = await _mediator.Send(request);
+
+        if (response.IsFailed) return BadRequest(response.Errors.ToErrorResponse());
+        return Ok();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetUserBySub([FromQuery] GetUserBySub request)
+    {
+        var response = await _mediator.Send(request);
+
+        if (response.IsFailed) return BadRequest(response.Errors.ToErrorResponse());
+        return Ok(response.Value);
     }
 }

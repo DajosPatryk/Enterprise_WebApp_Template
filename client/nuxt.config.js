@@ -5,6 +5,15 @@ export default defineNuxtConfig({
     enabled: true
   },
 
+  vite: {
+    server: {
+      hmr: {
+        protocol: "ws",
+        host: "0.0.0.0",
+      },
+    },
+  },
+
   modules: [
     "@nuxtjs/tailwindcss",
     "nuxt-mail",
@@ -17,6 +26,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiAddress: process.env.API_ADDRESS,
+      internalApiAddress: process.env.INTERNAL_API_ADDRESS,
       mailTo: process.env.MAIL_TO
     },
     private: {

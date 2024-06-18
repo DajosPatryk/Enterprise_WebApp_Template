@@ -8,6 +8,7 @@ node_modules/
 dist/
 static/sw.js
 .npm/
+.output/
 
 # Logs and runtime data
 *.log
@@ -15,6 +16,7 @@ static/sw.js
 *.pid.lock
 pids
 logs
+log
 *.tsbuildinfo
 
 # Environment configuration files
@@ -51,7 +53,6 @@ build/
 *.vsp
 *.vspx
 *.nupkg
-*.user
 [Tt]est[Rr]esults/
 secrets.json
 Secrets.Targets
