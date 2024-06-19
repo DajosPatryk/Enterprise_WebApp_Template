@@ -23,9 +23,11 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+      args:
+        - ASPNETCORE_ENVIRONMENT=Development
     container_name: "dotnet_api"
     volumes:
-      - ./server/:/app
+      - ./server/:/App
     restart: always
     labels:
       - "author=${AUTHOR}"
@@ -35,13 +37,14 @@ services:
     depends_on:
       - db
     environment:
-      DB_CONNECTION: "Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Database=${POSTGRES_DB};"
-      ASPNETCORE_ENVIRONMENT: "Development"
+      DB_CONNECTION: "Host=db;Port=${POSTGRES_PORT};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Database=${POSTGRES_DB};"
 
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
+      args:
+        - NODE_ENV=development
     container_name: "nuxt_client"
     volumes:
       - ./client/:/app
@@ -57,9 +60,8 @@ services:
     depends_on:
       - api
     environment:
-      API_ADDRESS: "http://localhost:8080"
-      INTERNAL_API_ADDRESS: "http://api:8080"
-      HOST: "0.0.0.0"
+      API_ADDRESS: "${DEV_API_ADDRESS}"
+      INTERNAL_API_ADDRESS: "${DEV_INTERNAL_API_ADDRESS}"
       NODE_ENV: "development"
 
   backup:

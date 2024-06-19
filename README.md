@@ -43,8 +43,7 @@ dotnet ef database update
 Build the application for production:
 
 ```bash
-docker-compose -f docker-compose.prod.yml build --no-cache
-docker-compose -f docker-compose.prod.yml up -d
+docker-compose -f docker-compose.prod.yml up --build
 ```
 
 The application is accessible on `http://localhost:80` and `http://localhost:443`.

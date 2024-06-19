@@ -10,12 +10,12 @@ import {fo} from "~/lib/utils.js";
  *                                The default method is 'GET', and the 'Content-Type' header is set to 'application/json' by default.
  *                                These defaults can be overridden in the options object.
  * @param {boolean} [includeAuthorization=false] - Determines whether to include authorization headers in the request.
- * @param {object} asyncDataOptions - Configuration options for useAsyncData, which manages the async fetch operation.
+ * @param {object} [asyncDataOptions={}] - Configuration options for useAsyncData, which manages the async fetch operation.
  *                                                       See more at: https://nuxt.com/docs/api/composables/use-async-data
  *
- * @returns {Promise<object>} A promise resolving to an object containing data and other metadata relevant for the client.
+ * @returns {Promise<{value?: object}>} A promise resolving to an object containing data and other metadata relevant for the client.
  */
-export async function useAsyncApi(endpoint, options, includeAuthorization = false, asyncDataOptions) {
+export async function useAsyncApi(endpoint, options, includeAuthorization = false, asyncDataOptions = {}) {
     const runtimeConfig = useRuntimeConfig()
     const fetchOptions  = await fo(options, includeAuthorization);
 
@@ -23,9 +23,6 @@ export async function useAsyncApi(endpoint, options, includeAuthorization = fals
         () => $fetch(`${runtimeConfig.public.internalApiAddress}${endpoint}`, fetchOptions),
         asyncDataOptions
     );
-
-    console.log("useAsyncData Addr", `${runtimeConfig.public.internalApiAddress}${endpoint}`);
-    console.log("useAsyncData", res);
 
     return res.data;
 }

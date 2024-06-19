@@ -1,15 +1,40 @@
-ARG NODE_IMAGE=oven/bun:latest
-FROM $NODE_IMAGE AS base
-WORKDIR /app
+# See all versions at https://hub.docker.com/r/oven/bun/tags
+FROM oven/bun:latest as base
+WORKDIR /usr/src/app
 
-FROM base AS setup
-COPY package.json ./
-RUN bun install
-RUN bun run build
+# Install dependencies into temp directory
+# This will cache them and speed up future builds
+FROM base AS install
+RUN mkdir -p /temp/dev
+COPY package.json /temp/dev/
+RUN cd /temp/dev && bun install
 
-FROM base AS production
-COPY --from=setup /app/.output ./
+# Install
+RUN mkdir -p /temp/prod
+COPY package.json /temp/prod/
+RUN cd /temp/prod && bun install
+
+# Copy packages from temp directory
+# Then copy all project files into the image
+FROM base AS prerelease
+ARG NODE_ENV
+ARG API_ADDRESS
+ARG INTERNAL_API_ADDRESS
+ENV NODE_ENV $NODE_ENV
+ENV API_ADDRESS $API_ADDRESS
+ENV INTERNAL_API_ADDRESS $INTERNAL_API_ADDRESS
+COPY --from=install /temp/dev/node_modules node_modules
+COPY --from=install /temp/dev/.nuxt .nuxt
 COPY . .
 
+RUN bun run build
+
+# Copy production dependencies and source code into final image
+FROM base AS release
+COPY --from=install /temp/prod/node_modules node_modules
+COPY --from=prerelease /usr/src/app/.output .
+COPY --from=prerelease /usr/src/app/package.json .
+
+USER bun
 EXPOSE 3000
 ENTRYPOINT [ "bun", "server/index.mjs" ]

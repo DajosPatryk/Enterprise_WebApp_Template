@@ -99,7 +99,6 @@ async function updateUser(sub: string, email: string): Promise<void>{
 <style scoped lang="postcss">
 .welcome {
   @apply bg-util-950;
-  height: 100vh;
 }
 
 .notice {

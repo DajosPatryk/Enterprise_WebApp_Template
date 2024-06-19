@@ -11,6 +11,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseCors("AllowLocalOrigins");
 }
+else
+{
+    app.UseCors("AllowProductionOrigins");
+}
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

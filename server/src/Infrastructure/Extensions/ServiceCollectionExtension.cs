@@ -15,6 +15,7 @@ public static class ServiceCollectionExtension
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
+            
             options.UseNpgsql(
                 Environment.GetEnvironmentVariable("DB_CONNECTION") ?? 
                 ConstructDbConnectionString()
@@ -24,11 +25,46 @@ public static class ServiceCollectionExtension
         {
             options.AddPolicy("AllowLocalOrigins", builder =>
             {
+                builder.WithOrigins("http://client:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
                 builder.WithOrigins("http://localhost:3000")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
+            });
+            options.AddPolicy("AllowProductionOrigins", builder =>
+            {
                 builder.WithOrigins("http://client:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                builder.WithOrigins("http://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                builder.WithOrigins("http://localhost")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                builder.WithOrigins("https://client:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                builder.WithOrigins("https://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                builder.WithOrigins("https://localhost")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                builder.WithOrigins($"http://{Environment.GetEnvironmentVariable("BASE_URL")}")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                builder.WithOrigins($"https://{Environment.GetEnvironmentVariable("BASE_URL")}")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();

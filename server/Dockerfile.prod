@@ -1,21 +1,21 @@
 ARG DOTNET_IMAGE=mcr.microsoft.com/dotnet/sdk:8.0
 ARG DOTNET_RUNTIME_IMAGE=mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled
 
-FROM $DOTNET_IMAGE AS base
-WORKDIR /app
+FROM $DOTNET_IMAGE AS build-env
+WORKDIR /App
 
-FROM base AS setup
-COPY *.csproj ./
+# Restore dependencies and compile app
+ARG ASPNETCORE_ENVIRONMENT
+ENV ASPNETCORE_ENVIRONMENT $ASPNETCORE_ENVIRONMENT
+COPY . .
 RUN dotnet nuget locals all --clear
 RUN dotnet restore
-
-FROM base AS prerelease
-COPY --from=setup /app/ ./
-COPY . ./
 RUN dotnet publish -c Release -o out
 
-FROM $DOTNET_RUNTIME_IMAGE AS runtime
-COPY --from=prerelease /app/out .
-EXPOSE 8080
+# Build runtime
+FROM $DOTNET_RUNTIME_IMAGE
+WORKDIR /App
+COPY --from=build-env /App/out .
 
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "server.dll"]

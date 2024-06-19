@@ -62,8 +62,9 @@ package-lock.json
 yarn.lock
 bun.lockb
 
-# Backup files
+# Backup files and cache
 /backups
+/nginx/cache/*
 
 # Specific file extensions to ignore
 *.swp

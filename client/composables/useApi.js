@@ -21,8 +21,5 @@ export async function useApi(endpoint, options, includeAuthorization = false) {
         fetchOptions
     ).json();
 
-    console.log("useFetch Addr", `${runtimeConfig.public.apiAddress}${endpoint}`);
-    console.log("useFetch", res);
-
     return await cr(res.response);
 }
