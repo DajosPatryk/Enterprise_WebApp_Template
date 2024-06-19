@@ -67,6 +67,5 @@ bun.lockb
 /nginx/cache/*
 
 # Specific file extensions to ignore
-*.swp
 *.un~
 Session.vim
