@@ -1,27 +1,21 @@
 # Ignore directories
-**/dist/
-**/node_modules/
-**/.nuxt/
-**/.vs/
-**/.idea/
-**/.vscode/
-**/.github/
-**/.output/
+/dist
+/node_modules
+/.nuxt
+/.vs
+/.idea
+/.vscode
+/.github
+/.output
 
 # Ignore specific files
-**/*.user
-**/secrets.json
-**/.gitignore
+*.user
+secrets.json
+.gitignore
 
 # Ignore Docker related files
-**/.dockerignore
-**/Dockerfile*
-**/docker-compose*
-
-# Ignore all variations and configurations of Dockerfiles
-**/Dockerfile
-**/Dockerfile.prod
-
-# Ignore all variations of docker-compose files
-**/docker-compose*
-**/docker-compose.*.yml
+.dockerignore
+Dockerfile*
+Dockerfile
+Dockerfile.prod
+docker-compose*

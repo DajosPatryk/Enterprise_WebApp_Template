@@ -1,9 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 const animate = require("tailwindcss-animate");
+
 module.exports = {
   mode: 'jit',
   purge: [
-      './public/index.html',
+    './public/index.html',
     './pages/**/*.{ts,tsx,vue}',
     './components/**/*.{ts,tsx,vue}',
     './layouts/**/*',
