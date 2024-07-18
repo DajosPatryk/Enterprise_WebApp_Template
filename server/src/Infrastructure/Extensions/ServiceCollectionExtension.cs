@@ -97,10 +97,15 @@ public static class ServiceCollectionExtension
 
         return services;
     }
+
+    private static void LoadLocalDotEnvFile()
+    {
+        DotEnv.Load(options: new DotEnvOptions(envFilePaths: new[] { "../.env" }, ignoreExceptions: false));
+    }
     
     private static string ConstructDbConnectionString()
     {
-        DotEnv.Load(options: new DotEnvOptions(envFilePaths: new[] { "../.env" }, ignoreExceptions: false));
+        LoadLocalDotEnvFile();
         
         return $"Host={Environment.GetEnvironmentVariable("POSTGRES_HOST")};" +
                $"Port={Environment.GetEnvironmentVariable("POSTGRES_PORT")};" +
