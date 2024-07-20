@@ -15,12 +15,10 @@ public static class ResultExtension
     public static object ToErrorResponse(this List<IError> errors)
     {
         if (errors == null) return null;
-        return new
+
+        return errors.Select(err => new
         {
-            errors = new
-            {
-                Result = errors.Select(err => err.Message).ToArray()
-            }
-        };
+            errorMessage = err.Message
+        }).ToArray();
     }
 }
