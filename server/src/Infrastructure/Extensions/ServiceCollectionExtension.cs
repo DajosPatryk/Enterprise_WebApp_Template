@@ -104,8 +104,6 @@ public static class ServiceCollectionExtension
     
     public static IServiceCollection LinkInterfaces(this IServiceCollection services)
     {
-        services.AddTransient<IPaymentProcessor, StripeService>();
-
         return services;
     }
     
