@@ -1,19 +1,20 @@
-﻿using FluentValidation;
-using server.Application.Behaviors;
-using server.Application.Commands.Users;
-using server.Application.Queries.Users;
-using server.Infrastructure.Filters;
-
-namespace server.Infrastructure.Extensions;
+﻿namespace server.Infrastructure.Extensions;
 
 using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using Data;
+using FluentValidation;
+using server.Application.Behaviors;
+using server.Application.Services;
+using server.Infrastructure.Filters;
+using server.Application.Commands.Users;
+using server.Application.Queries.Users;
 
 public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
+        // Base
         services.AddDbContext<ApplicationDbContext>(options =>
             
             options.UseNpgsql(
@@ -70,13 +71,16 @@ public static class ServiceCollectionExtension
                     .AllowCredentials();
             });
         });
-        services.AddMediatrServices();
         services.AddControllers(options =>
         {
             options.Filters.Add<ExceptionHandlingFilter>();
         });
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        
+        services.AddMediatrServices();
+        services.LinkInterfaces();
+        services.AddAuthorization();
 
         return services;
     }
@@ -91,9 +95,26 @@ public static class ServiceCollectionExtension
             config.AddOpenBehavior(typeof(TransactionBehavior<,>));
         });
 
+        // Validators
         services.AddSingleton<IValidator<AddUser>, AddUserValidator>();
         services.AddSingleton<IValidator<UpdateUser>, UpdateUserValidator>();
         services.AddSingleton<IValidator<GetUserBySub>, GetUserBySubValidator>();
+        return services;
+    }
+    
+    public static IServiceCollection LinkInterfaces(this IServiceCollection services)
+    {
+        services.AddTransient<IPaymentProcessor, StripeService>();
+
+        return services;
+    }
+    
+    public static IServiceCollection AddAuthorization(this IServiceCollection services)
+    {
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RoleAdmin", policy => policy.RequireClaim("role", "admin"));
+        });
 
         return services;
     }

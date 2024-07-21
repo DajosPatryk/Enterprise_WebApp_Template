@@ -4,6 +4,7 @@ using Commands;
 using MediatR;
 using Data;
 using Infrastructure.Extensions;
+using server.Data.Entities;
 
 public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequestTransaction<TResponse>
 {
@@ -36,6 +37,7 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
 
                     // TODO: Add logic after transaction.
 
+                    UpdateModifiedAt();
                     await _dbContext.CommitTransactionAsync(transaction);
                 }
             });
@@ -46,6 +48,17 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         {
             _logger.LogError(ex, "Error Handling transaction for {CommandName} ({@Command})", request.GetGenericTypeName(), request);
             throw;
+        }
+    }
+    
+    public void UpdateModifiedAt()
+    {
+        var entries = _dbContext.ChangeTracker.Entries()
+            .Where(e => e.Entity is ITrackableEntity && e.State == EntityState.Modified);
+
+        foreach (var entry in entries)
+        {
+            ((ITrackableEntity)entry.Entity).ModifiedAt = DateTime.UtcNow;
         }
     }
 }
