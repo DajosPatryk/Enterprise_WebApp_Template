@@ -14,9 +14,10 @@ public static class ServiceCollectionExtension
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        // Base
+        // Loads local .env file if env vars don't exist
+        if (Environment.GetEnvironmentVariable("DB_CONNECTION") == null) LoadLocalDotEnvFile();
+        
         services.AddDbContext<ApplicationDbContext>(options =>
-            
             options.UseNpgsql(
                 Environment.GetEnvironmentVariable("DB_CONNECTION") ?? 
                 ConstructDbConnectionString()
@@ -119,8 +120,6 @@ public static class ServiceCollectionExtension
     
     private static string ConstructDbConnectionString()
     {
-        LoadLocalDotEnvFile();
-        
         return $"Host={Environment.GetEnvironmentVariable("POSTGRES_HOST")};" +
                $"Port={Environment.GetEnvironmentVariable("POSTGRES_PORT")};" +
                $"Username={Environment.GetEnvironmentVariable("POSTGRES_USER")};" +
