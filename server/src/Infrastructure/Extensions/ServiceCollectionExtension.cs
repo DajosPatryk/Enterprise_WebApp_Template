@@ -109,11 +109,6 @@ public static class ServiceCollectionExtension
     
     public static IServiceCollection AddAuthorization(this IServiceCollection services)
     {
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy("RoleAdmin", policy => policy.RequireClaim("role", "admin"));
-        });
-
         return services;
     }
 
