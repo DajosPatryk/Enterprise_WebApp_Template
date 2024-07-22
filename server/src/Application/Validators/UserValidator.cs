@@ -8,7 +8,7 @@ public class UserValidator : AbstractValidator<User>
     public UserValidator()
     {
         // Email address validation happens in Entity already, this is unnecessary.
-        RuleFor(u => u.Email).EmailAddress().WithMessage("Email must be valid.");
+        RuleFor(u => u.Email).EmailAddress().WithMessage("Email must be valid");
         RuleFor(u => u.Sub).SetValidator(new UserSubValidator());
     }
 }

@@ -5,7 +5,7 @@ using MediatR;
 using Validators;
 using Data.Entities;
 
-public record UpdateUser(User User) : IRequestTransaction<Result>;
+public record UpdateUser(User user) : IRequestTransaction<Result>;
 
 public class UpdateUserHandler : IRequestHandler<UpdateUser, Result>
 {
@@ -18,7 +18,7 @@ public class UpdateUserHandler : IRequestHandler<UpdateUser, Result>
     
     public async Task<Result> Handle(UpdateUser request, CancellationToken cancellationToken)
     {
-        _set.Update(request.User);
+        _set.Update(request.user);
 
         return Result.Ok();
 
@@ -31,6 +31,6 @@ public class UpdateUserValidator : AbstractValidator<UpdateUser>
 {
     public UpdateUserValidator()
     {
-        RuleFor(e => e.User).SetValidator(new UserValidator());
+        RuleFor(e => e.user).SetValidator(new UserValidator());
     }
 }
