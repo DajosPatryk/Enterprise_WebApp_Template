@@ -1,6 +1,6 @@
-# Enterprise Web-App Template - Nuxt4 + .NET8 + PostgreSQL
+# Enterprise Web-App Template - Nuxt3 + .NET8 + PostgreSQL
 
-Development package based on Vue3 Nuxt4, .NET8 and PostgreSQL. Modern & Performance Oriented.
+Development package based on Vue3 Nuxt3, .NET8 and PostgreSQL. Modern & Performance Oriented.
 [Nuxt3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 [.NET8 documentation](https://learn.microsoft.com/en-us/dotnet/fundamentals/) to learn more.
 
