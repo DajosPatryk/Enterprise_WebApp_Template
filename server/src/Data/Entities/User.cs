@@ -1,16 +1,19 @@
 namespace server.Data.Entities;
 
 using System.ComponentModel.DataAnnotations;
+using server.Application.Authorization;
 
-public class User
+public class User : ITrackableEntity
 {
+    public DateTime CreatedAt { get; } = DateTime.UtcNow;
+    
+    public DateTime ModifiedAt { get; set; } = DateTime.UtcNow;
+    
     [Key]
     [Required]
-    [MaxLength(20)]
     public string Sub { get; set; }
 
     [Required]
     [EmailAddress]
-    [MaxLength(100)]
     public string Email { get; set; }
 }
